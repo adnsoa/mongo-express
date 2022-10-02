@@ -1,0 +1,40 @@
+version: '3.8'
+
+volumes:
+  mongo_vol:
+
+networks:
+  mongo_net:
+    name: mongo_net
+    driver: bridge
+
+services:
+  mongo-express:
+    image: adnsoa/mongo-express:v1
+    container_name: mongo-express
+    ports:
+      - 8081:8081
+    networks:
+      - mongo_net
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    depends_on:
+      - mongodb
+    environment:
+      ME_CONFIG_MONGODB_URL: "mongodb://mongouser:mongopwd@mongodb:27017/"
+      ME_CONFIG_SITE_COOKIESECRET: cookiesecret
+      ME_CONFIG_SITE_SESSIONSECRET: sessionsecret
+
+  mongodb:
+    image: mongo:6.0.1
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    networks:
+      - mongo_net
+    volumes:
+      - mongo_vol:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongouser
+      MONGO_INITDB_ROOT_PASSWORD: mongopwd
