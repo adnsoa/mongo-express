@@ -50,7 +50,6 @@ build/
 lib-cov
 pids
 results
-config.js
 admins.json
 .env
 
